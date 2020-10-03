@@ -100,11 +100,7 @@ X_aQGC = "3.451"
 process = "WplusToLNuWplusTo2JJJ"
 # Read three fils and their tree
 tfile_OnlyFT1_initialize = r.TFile(file_aQGC)
-#tfile_OnlyFT1_initialize = r.TFile("/eos/cms/store/user/jlawhorn/WVJJTree_Jun24/2018_aQGC/WminusTo2JZTo2LJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root")
-#tfile_OnlyFT1_initialize = r.TFile("/eos/cms/store/user/jlawhorn/WVJJTree_Jun24/2018_aQGC/WplusTo2JWminusTo2LJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root")
 tfile_SM = r.TFile(file_SM)
-#tfile_SM = r.TFile("/eos/cms/store/user/jlawhorn/WVJJTree_Apr20/2016/WminusTo2JZTo2LJJ_EWK_LO_SM_MJJ100PTJ10_TuneCUETP8M1_13TeV-madgraph-pythia8.root")
-#tfile_SM = r.TFile("/eos/cms/store/user/jlawhorn/WVJJTree_Jun20/2017/WplusTo2JWminusToLNuJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root")
 
 tree_OnlyFT1_initialize = tfile_OnlyFT1_initialize.Get("Events")
 tree_SM = tfile_SM.Get("Events")
@@ -118,7 +114,6 @@ for n, event in enumerate(tree_OnlyFT1_initialize):
 		break
 	print "Weight Details for OnlyFT1_initialize: ID = ",event.aqgcWeight[35],"\tWeight = ",event.aqgcWeight[35]
 
-#print X_SM*lumi
 # Define 3 histogram for three different samples
 ## Hist 1
 print "Reading Histo: h_OnlyFT1_initialize..."
@@ -168,8 +163,6 @@ tree_SM.Draw(SM,X_SM+"*"+lumi+"/"+str(n_SM)+"*"+"("+args.cut+")","")
 
 h3 = createRatio(h_SM,h_aQGC_initialize,1)
 #h3 = createRatio(h_SM,h_OnlyFT1_initialize,1)
-#h4 = createRatio(h_SM,h_AllaQGCPar_initialize,4)
-#h5 = createRatio(h_SM,h_FT0_8e12,2)
 
 canvas, pad1, pad2 = createCanvasPads()
 
@@ -184,14 +177,12 @@ h_SM.Draw("same")
 h_aQGC_initialize.Draw("same")
 #h_FT5_12e12.Draw("same")
 #h_AllaQGCPar_initialize.Draw("same")
-#h_FT0_10e12.Draw("same")
 
 leg.Draw()
 
 pad2.cd()
 h3.Draw("ep")
 #h4.Draw("ep same")
-#h7.Draw("ep same")
 l = r.TLine( 0, 1, 2000, 1 )
 l.SetLineStyle(3)
 l.Draw("same")
