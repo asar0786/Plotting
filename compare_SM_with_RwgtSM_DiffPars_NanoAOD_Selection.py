@@ -14,7 +14,12 @@ tdrstyle.setTDRStyle()
 #			    help="Variable name in root tree")
 #	return parser
 ap = argparse.ArgumentParser()
+ap.add_argument("-fsm", "--file_SM", type=str, required=True, default="/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root", help="SM file path")
+ap.add_argument("-faQGC", "--file_aQGC", type=str, required=True, default="/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusTo2LWplusTo2JJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root", help="aQGC file path")
 ap.add_argument("-v", "--tree_var", type=str, required=True, default="LHE_MothInfo_mtWLep", help="Variable name in root tree")
+ap.add_argument("--ofname", type=str, required=False, default="Unknown", help="output file name")
+ap.add_argument("--X_SM", type=str, required=False, default="0.039", help="SM sample cross section")
+ap.add_argument("--X_aQGC", type=str, required=False, default="0.2223", help="aQGC sample cross section")
 ap.add_argument("--cut", type=str, required=False, default="", help="Cut String")
 ap.add_argument("--xmin", type=float, required=False, default="0.0", help="minimum range of histogram")
 ap.add_argument("--xmax", type=float, required=False, default="1000.0", help="maximum range of histogram")
@@ -92,15 +97,17 @@ def createCanvasPads():
 
 #leg = r.TLegend(0.6,0.65,0.9,0.9)
 leg = r.TLegend(0.1,0.1,0.4,0.3)
-file_SM = "/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root"
-file_aQGC = "/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusTo2LWplusTo2JJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root"
+#file_SM = "/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusToLNuWplusTo2JJJ_EWK_LO_SM_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root"
+#file_aQGC = "/eos/cms/store/user/jlawhorn/WVJJTree_Jul20/2018/WplusTo2LNuWplusTo2JJJ_EWK_LO_aQGC_MJJ100PTJ10_TuneCP5_13TeV-madgraph-pythia8.root"
 lumi = "59.0"
 X_SM = "0.08793"
 X_aQGC = "3.451"
 process = "WplusToLNuWplusTo2JJJ"
 # Read three fils and their tree
-tfile_OnlyFT1_initialize = r.TFile(file_aQGC)
-tfile_SM = r.TFile(file_SM)
+#tfile_SM = r.TFile(file_SM)
+tfile_SM = r.TFile(args.file_SM)
+#tfile_OnlyFT1_initialize = r.TFile(file_aQGC)
+tfile_OnlyFT1_initialize = r.TFile(args.file_aQGC)
 
 tree_OnlyFT1_initialize = tfile_OnlyFT1_initialize.Get("Events")
 tree_SM = tfile_SM.Get("Events")
@@ -149,9 +156,9 @@ SM = args.tree_var+">>h_SM"
 #FT5 = args.tree_var+">>h_FT5_12e12"
 #if(vbf1_AK4_pt > 50):
 
-tree_OnlyFT1_initialize.Draw(Reweight,X_aQGC+"*"+lumi+"*aqgcWeight[26]/"+str(n_aQGC)+"*"+"("+args.cut+")","")
-tree_OnlyFT1_initialize.Draw(aQGC,X_aQGC+"*"+lumi+"*aqgcWeight[0]/"+str(n_aQGC)+"*"+"("+args.cut+")","")
-tree_SM.Draw(SM,X_SM+"*"+lumi+"/"+str(n_SM)+"*"+"("+args.cut+")","")
+tree_OnlyFT1_initialize.Draw(Reweight,args.X_aQGC+"*"+lumi+"*aqgcWeight[26]/"+str(n_aQGC)+"*"+"("+args.cut+")","")
+tree_OnlyFT1_initialize.Draw(aQGC,args.X_aQGC+"*"+lumi+"*aqgcWeight[0]/"+str(n_aQGC)+"*"+"("+args.cut+")","")
+tree_SM.Draw(SM,args.X_SM+"*"+lumi+"/"+str(n_SM)+"*"+"("+args.cut+")","")
 #else:
 #print "condition not satisfied"
 
@@ -188,7 +195,7 @@ l.SetLineStyle(3)
 l.Draw("same")
 
 #canvas.Draw()
-canvas.SaveAs(args.tree_var+"_"+process+"_2018.png")
+canvas.SaveAs(args.tree_var+"_"+args.ofname+"_2018.png")
 
 clock.Stop()
 
